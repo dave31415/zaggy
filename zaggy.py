@@ -5,14 +5,15 @@ from cvxopt import spmatrix, matrix, sparse
 
 
 def l1_fit(index, y, beta_d2=1.0, beta_d1=1.0, beta_seasonal=1.0,
-           beta_step=5.0, period=12, growth=0.0, step_permissives=None):
+           beta_step=5.0, growth=0.0, step_permissives=None,
+           seasonlity_matrix=None):
+
     assert isinstance(y, np.ndarray)
     assert isinstance(index, np.ndarray)
     #x must be integer type for seasonality to make sense
     assert index.dtype.kind == 'i'
     n = len(y)
     m = n-2
-    p = period
 
     ys, y_min, y_max = mu.scale_numpy(y)
 
@@ -20,8 +21,7 @@ def l1_fit(index, y, beta_d2=1.0, beta_d1=1.0, beta_seasonal=1.0,
     D2 = mu.get_second_derivative_matrix_nes(index)
     H = mu.get_step_function_matrix(n)
     T = mu.get_T_matrix(p)
-    B = mu.get_B_matrix_nes(index, p)
-    Q = B*T
+    Q = seasonlity_matrix * T
 
     #define F_matrix from blocks like in paper
     zero = mu.zero_spmatrix
