@@ -30,6 +30,7 @@ class TestZaggy(TestCase):
         self.assertEquals(len(result['model']), self.num)
 
     def test_l1_fit_runs_correctly(self):
+        # how low can we shrink this tolerance and still pass?
         tol = 0.03
         index = np.arange(self.num)
         result = l1_fit(index, self.y,
