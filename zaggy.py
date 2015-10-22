@@ -14,6 +14,7 @@ def l1_fit(index, y, beta_d2=1.0, beta_d1=1.0, beta_seasonal=1.0,
     assert index.dtype.kind == 'i'
     n = len(y)
     m = n-2
+    p = seasonlity_matrix.size[1]
 
     ys, y_min, y_max = mu.scale_numpy(y)
 
@@ -59,6 +60,7 @@ def l1_fit(index, y, beta_d2=1.0, beta_d1=1.0, beta_seasonal=1.0,
     h = h*scaling
     seas = np.asarray(Q*matrix(s)).squeeze()
     steps = np.asarray(H*matrix(h)).squeeze()
+    psteps = np.asarray(H*matrix(h)).squeeze()
     x = xbase + seas + steps
 
     solution = {'xbase': xbase, 'seas': seas, 'steps': steps, 'x': x, 'h': h, 's': s}
