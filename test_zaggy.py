@@ -25,8 +25,8 @@ class TestZaggy(TestCase):
     def test_zaggy(self):
         index = np.arange(self.num)
         result = l1_fit(index, self.y,
-                        seasonlity_matrix=self.seasonality_matrix)
-        self.assertEquals(len(result['x']), self.num)
+                        seasonality_matrix=self.seasonality_matrix)
+        self.assertEquals(len(result['model']), self.num)
 
 
 
