@@ -2,6 +2,7 @@
 from cvxopt examples code
 http://cvxopt.org/examples/mlbook/l1.html
 Gives two different algorithms, just kept first one (not the blas version)
+This could use some refactoring and cleaning up
 """
 import cvxopt
 
