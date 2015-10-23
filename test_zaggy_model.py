@@ -1,6 +1,6 @@
 import unittest
 from unittest import TestCase
-from date_utils import date_range
+from date_scaling import date_range
 from mocks import make_mock
 from zaggy_model import ZaggyModel
 
@@ -8,7 +8,7 @@ from zaggy_model import ZaggyModel
 class TestZaggyModel(TestCase):
     def setUp(self):
         mock = make_mock()
-        self.y = mock['y_with_seasonal']
+        self.y = mock['y']
         num = len(self.y)
         self.dates = date_range(2015, 1, 2029, 12)[0: num]
 
@@ -18,7 +18,9 @@ class TestZaggyModel(TestCase):
 
     def test_zaggy_model_fit_runs(self):
         self.model = ZaggyModel(self.dates, self.y)
+        self.assertIsNone(self.model.solution)
         self.model.fit()
+        self.assertIsNotNone(self.model.solution)
         assert True
 
 

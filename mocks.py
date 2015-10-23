@@ -20,17 +20,18 @@ def make_mock(do_plot=doplot, period=6, sea_amp=0.05, noise=0.0):
         seas_lookup = {k: v for k, v in enumerate(seas)}
         seasonal_part = np.array([seas_lookup[i % period] for i in x])
         seasonal_part = seasonal_part - seasonal_part.mean()
-        y_with_seasonal = y + seasonal_part
+        y_without_seasonal = y
+        y = y + seasonal_part
     else:
-        y_with_seasonal = y
+        y_without_seasonal = y
 
     if do_plot:
         from matplotlib import pylab as plt
         plt.clf()
         lab = 'True, period=%s' % period
-        plt.plot(x, y, marker='o', linestyle='-', label=lab, markersize=8, alpha=0.3,color='blue')
+        plt.plot(x, y_without_seasonal, marker='o', linestyle='-', label=lab, markersize=8, alpha=0.3,color='blue')
         lab = 'True + seasonality, period=%s' % period
-        plt.plot(x, y_with_seasonal, marker='o', linestyle='-', label=lab, markersize=8, alpha=0.3,color='red')
+        plt.plot(x, y, marker='o', linestyle='-', label=lab, markersize=8, alpha=0.3,color='red')
 
     np.random.seed(None)
-    return {'x': x, 'y': y, 'y_with_seasonal': y_with_seasonal, 'seas_lookup': seas_lookup}
+    return {'x': x, 'y': y, 'y_without_seasonal': y_without_seasonal, 'seas_lookup': seas_lookup}

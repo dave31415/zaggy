@@ -5,7 +5,7 @@ from cvxopt import spmatrix, matrix, sparse
 
 
 def l1_fit(index, y, beta_d2=1.0, beta_d1=1.0, beta_seasonal=1.0,
-           beta_step=5.0, growth=0.0, step_permissives=None,
+           beta_step=1000.0, growth=0.0, step_permissives=None,
            seasonality_matrix=None):
     """
     Least Absolute Deviation Time Series fitting function
@@ -28,6 +28,8 @@ def l1_fit(index, y, beta_d2=1.0, beta_d1=1.0, beta_seasonal=1.0,
            comes from get_seasonality_matrix function
     :return:
     """
+
+    print "beta_d2: %s" % beta_d2
 
     assert isinstance(y, np.ndarray)
     assert isinstance(index, np.ndarray)

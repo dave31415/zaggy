@@ -1,7 +1,7 @@
 import unittest
 from unittest import TestCase
 from seasonality import get_seasonality_matrix
-from date_utils import date_range
+from date_scaling import date_range
 
 
 class TestGetSeasonalityMatrix(TestCase):

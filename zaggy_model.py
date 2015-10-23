@@ -1,4 +1,4 @@
-from scaling import scale_date
+from date_scaling import scale_date
 from zaggy import l1_fit
 from seasonality import get_seasonality_matrix
 import numpy as np
@@ -18,7 +18,7 @@ class ZaggyModel(object):
     """
 
     def __init__(self, dates, y,
-                 timescale=(1, 'day'),
+                 timescale=(1, 'month'),
                  seasonality_function=None,
                  params=None):
         """

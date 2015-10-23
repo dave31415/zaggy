@@ -2,7 +2,7 @@ import unittest
 from unittest import TestCase
 from mocks import make_mock
 from seasonality import get_seasonality_matrix
-from date_utils import date_range
+from date_scaling import date_range
 from zaggy import l1_fit
 import numpy as np
 
@@ -14,7 +14,7 @@ class TestZaggy(TestCase):
 
     def setUp(self):
         self.mock = make_mock(do_plot=False)
-        self.y = self.mock['y_with_seasonal']
+        self.y = self.mock['y']
         self.num = len(self.y)
         self.dates = date_range(2015, 1, 2029, 12)[0:self.num]
         self.assertEquals(len(self.y), len(self.dates))

@@ -10,6 +10,7 @@ import cvxopt
 def l1(P, q):
     """
     Returns the solution u of the l_1 approximation problem
+    A.K.A the Least Absolute Deviation (LAD) problem
         (primal) minimize ||P*u - q||_1
     """
 
@@ -34,7 +35,7 @@ def l1(P, q):
             y[:n] = alpha * P.T * (x[:m] - x[m:]) + beta*y[:n]
             y[n:] = -alpha * (x[:m] + x[m:]) + beta*y[n:]
 
-    def Fkkt(W): 
+    def kkt_solver(W):
 
         # Returns a function f(x, y, z) that solves
         #
@@ -52,7 +53,7 @@ def l1(P, q):
         A = P.T * cvxopt.spdiag(D) * P
         cvxopt.lapack.potrf(A)
 
-        def f(x, y_unused, z):
+        def func(x, y_unused, z):
             #Ok, that y is not used
             x[:n] += P.T * (cvxopt.mul(cvxopt.div(d2**2 - d1**2, d1**2 + d2**2), x[n:])
                             + cvxopt.mul(.5*D, z[:m]-z[m:]))
@@ -65,7 +66,7 @@ def l1(P, q):
             z[:m] = cvxopt.div(u-x[n:]-z[:m], d1)
             z[m:] = cvxopt.div(-u-x[n:]-z[m:], d2)
 
-        return f
+        return func
 
     # Initial primal and dual points from least-squares solution.
     # uls minimizes ||P*u-q||_2; rls is the LS residual.
@@ -88,7 +89,7 @@ def l1(P, q):
     z0 = cvxopt.matrix([.5*(1+w), .5*(1-w)])
 
     dims = {'l': 2*m, 'q': [], 's': []}
-    sol = cvxopt.solvers.conelp(c, Fi, h, dims, kktsolver=Fkkt,
+    sol = cvxopt.solvers.conelp(c, Fi, h, dims, kktsolver=kkt_solver,
                                 primalstart={'x': x0, 's': s0},
                                 dualstart={'z': z0})
     return sol['x'][:n]
