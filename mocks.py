@@ -3,7 +3,7 @@ import numpy as np
 doplot = False
 
 
-def make_l1tf_mock(do_plot=doplot, period=6, sea_amp=0.05, noise=0.0):
+def make_mock(do_plot=doplot, period=6, sea_amp=0.05, noise=0.0):
     np.random.seed(3733)
     num = 100
     x = np.arange(num)

@@ -1,6 +1,7 @@
 from scaling import scale_date
 from zaggy import l1_fit
 from seasonality import get_seasonality_matrix
+import numpy as np
 
 
 def default_params():
@@ -15,31 +16,41 @@ class ZaggyModel(object):
     """
     A zaggy time series model
     """
+
     def __init__(self, dates, y,
                  timescale=(1, 'day'),
                  seasonality_function=None,
                  params=None):
         """
+        Instantiate and initialize the object
         :param dates: iterable of datetime.date or datetime.datetime objects
         :param y: iterable, the y-values for the time series
         :param timescale: sets the time scale for scaling dates to numbers
                           allows the regularization parameters to stay scale
                           independent
-        :param seasonality_function:
-        :param params:
-        :return:
+        :param seasonality_function: a function that maps dates to an index
+               pertaining to seasonality variables (zero indexed)
+               example: lambda date: date.month-1
+        :param params: a dictionary of overrides for default parameters,
+               mostly regularization parameters, see default_params
+        :return: an object instance
         """
-        self.dates = dates
-        self.y = y
+        self.dates = np.array(dates)
+        self.y = np.array(y)
+        # scale the dates to an index
         self.timescale = timescale
-        self.x = [scale_date(date, self.timescale) for date in dates]
+        self.x = np.array([scale_date(date, self.timescale) for date in dates])
         if seasonality_function is None:
-            seasonality_function = lambda x: 0
+            # TODO: does it make sense to have a default?
+            seasonality_function = lambda date: date.month - 1
+
+        # calculate the seasonality matrix, this combined with the
+        # index 'x' allows us to forget about dates and call the
+        # date agnostic fit function
 
         self.seasonality_matrix = get_seasonality_matrix(dates,
                                                          seasonality_function)
         self.solution = None
-
         self.params = default_params()
 
         if params is not None:
@@ -60,5 +71,8 @@ class ZaggyModel(object):
                                seasonality_matrix=self.seasonality_matrix)
 
     def predict(self, dates):
+        if self.solution is None:
+            raise ValueError('Solution is not present, must first call fit')
+        # calculate the model at the dates, not implemented yet
         pass
 

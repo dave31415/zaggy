@@ -32,7 +32,7 @@ def l1_fit(index, y, beta_d2=1.0, beta_d1=1.0, beta_seasonal=1.0,
     assert isinstance(y, np.ndarray)
     assert isinstance(index, np.ndarray)
     #x must be integer type for seasonality to make sense
-    assert index.dtype.kind == 'i'
+    #assert index.dtype.kind == 'i'
     # dimensions
     n = len(y)
     m = n-2
