@@ -5,8 +5,7 @@ from cvxopt import spmatrix, matrix, sparse
 
 
 def l1_fit(index, y, beta_d2=1.0, beta_d1=1.0, beta_seasonal=1.0,
-           beta_step=1000.0, growth=0.0, step_permissives=None,
-           seasonality_matrix=None):
+           beta_step=1000.0, growth=0.0, seasonality_matrix=None):
     """
     Least Absolute Deviation Time Series fitting function
            lower-level than version operating on actual dates
@@ -20,8 +19,6 @@ def l1_fit(index, y, beta_d2=1.0, beta_d1=1.0, beta_seasonal=1.0,
            step-function components
     :param growth: the default growth rate that is regularized toward
            default 0
-    :param step_permissives: step function regularization for each point
-           which will over-ride global value
     :param seasonality_matrix:
            matrix which maps seasonality variables onto the index of data points
            allows the problem to be written in purely matrix form
@@ -59,7 +56,7 @@ def l1_fit(index, y, beta_d2=1.0, beta_d1=1.0, beta_seasonal=1.0,
     # allow step-function regularization to change at some points
     # is this really needed?
 
-    step_reg = mu.get_step_function_reg(n, beta_step, permissives=step_permissives)
+    step_reg = mu.get_step_function_reg(n, beta_step)
 
     # define F_matrix from blocks like in white paper
     # so that the problem can be stated as a standard LAD problem
@@ -94,12 +91,14 @@ def l1_fit(index, y, beta_d2=1.0, beta_d1=1.0, beta_seasonal=1.0,
     step_jumps *= scaling
     seasonal_component = np.asarray(q*matrix(seasonal_parameters)).squeeze()
     step_component = np.asarray(h*matrix(step_jumps)).squeeze()
-    model = base + seasonal_component + step_component
+    model_without_seasonal = base + step_component
+    model = model_without_seasonal + seasonal_component
 
     solution = {'base': base,
                 'seasonal_component': seasonal_component,
                 'step_component': step_component,
                 'model': model,
+                'model_without_seasonal': model_without_seasonal,
                 'step_jumps': step_jumps,
                 'seasonal_parameters': seasonal_parameters}
 

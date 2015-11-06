@@ -24,9 +24,25 @@ def plot_model(model):
 def make_simple_plot(params=None):
     mock = get_mock_with_dates()
     plot_mock(mock)
-    timescale = (1.0, 'day')
+    timescale = (1.0, 'month')
     model = ZaggyModel(mock['dates'], mock['y'], timescale=timescale, params=params)
     model.fit()
     plot_model(model)
+    plt.legend()
+    return model
+
+
+def make_extrapolatad_plot(params=None):
+    mock = get_mock_with_dates()
+    plot_mock(mock)
+    timescale = (1.0, 'month')
+    model = ZaggyModel(mock['dates'], mock['y'], timescale=timescale, params=params)
+    model.fit()
+    plot_model(model)
+
+    dates = date_range(2022, 1, 2024, 12)
+    results = model.predict(dates)
+    plt.plot(dates, results, color='orange', alpha=0.5, marker='d')
+
     plt.legend()
     return model
