@@ -28,6 +28,8 @@ class TestZaggyModel(TestCase):
         self.assertIsNotNone(self.model.interpolate)
         self.assertIsNotNone(self.model.extrapolate_without_seasonal)
         self.assertIsNotNone(self.model.seasonality_function)
+        self.assertIsNotNone(self.model.date_to_seasonal_component)
+        self.assertIsNotNone(self.model.compression_dict)
 
     def test_zaggy_predict_on_fitted_points(self):
         self.model = ZaggyModel(self.dates, self.y)
