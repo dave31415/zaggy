@@ -66,6 +66,9 @@ class ZaggyModel(object):
         self.interpolate = lambda x: None
         self.extrapolate_without_seasonal = lambda x: None
 
+        # TODO: make a mapping here from date to compressed index
+        # TODO: which handles unconstrained indices
+
         if params is not None:
             # override any parameters handed in with
             # params dictionary
@@ -124,6 +127,9 @@ class ZaggyModel(object):
 
         seasonal_indices_extrap_raw = [self.seasonality_function(date)
                                        for date in dates_extrap]
+
+        # TODO: needs to be able to handle dates that have no constrained param
+        # TODO: figure out an elegant way to do that, see TODO above
 
         seasonal_indices_extrap = [self.compression_dict[i]
                                    for i in seasonal_indices_extrap_raw]
