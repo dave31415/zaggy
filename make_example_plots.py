@@ -13,19 +13,24 @@ def get_mock_with_dates():
 
 def plot_mock(mock):
     plt.clf()
-    plt.plot(mock['dates'], mock['y'], marker='+', color='blue')
-    plt.plot(mock['dates'], mock['y_without_seasonal'], color='green',alpha=0.3, linewidth=1)
+    plt.plot(mock['dates'], mock['y'], marker='+', color='blue',
+             label='data', markersize=9)
+    plt.plot(mock['dates'], mock['y_without_seasonal'],
+             color='green', alpha=0.6, linewidth=1,
+             label='model without seasonal')
 
 
 def plot_model(model):
-    plt.plot(model.dates, model.solution['model'], color='red')
+    plt.plot(model.dates, model.solution['model'], color='red',
+             label='model')
 
 
 def make_simple_plot(params=None):
     mock = get_mock_with_dates()
     plot_mock(mock)
     timescale = (1.0, 'month')
-    model = ZaggyModel(mock['dates'], mock['y'], timescale=timescale, params=params)
+    model = ZaggyModel(mock['dates'], mock['y'], timescale=timescale,
+                       params=params)
     model.fit()
     plot_model(model)
     plt.legend()
@@ -36,13 +41,20 @@ def make_extrapolatad_plot(params=None):
     mock = get_mock_with_dates()
     plot_mock(mock)
     timescale = (1.0, 'month')
-    model = ZaggyModel(mock['dates'], mock['y'], timescale=timescale, params=params)
+    model = ZaggyModel(mock['dates'], mock['y'], timescale=timescale,
+                       params=params)
     model.fit()
     plot_model(model)
 
     dates = date_range(2022, 1, 2024, 12)
     results = model.predict(dates)
-    plt.plot(dates, results, color='orange', alpha=0.5, marker='d')
+    plt.plot(dates, results, color='orange', alpha=0.7, marker='d',
+             label='predictions')
 
-    plt.legend()
+    dates = date_range(2014, 1, 2016, 1)
+    results = model.predict(dates)
+    plt.plot(dates, results, color='orange', alpha=0.7, marker='s',
+             label='predictions (earlier)')
+
+    plt.legend(loc='upper left')
     return model

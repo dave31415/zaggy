@@ -4,11 +4,12 @@ from seasonality import get_seasonality_matrix
 import numpy as np
 from scipy.interpolate import interp1d
 
+
 def default_params():
     return {"beta_d1": 0.0,
             "beta_d2": 1.0,
             "beta_seasonal": 1.0,
-            "beta_step": 5.0,
+            "beta_step": 500.0,
             "growth": 0.0}
 
 
@@ -51,8 +52,10 @@ class ZaggyModel(object):
         # index 'x' allows us to forget about dates and call the
         # date agnostic fit function
 
-        self.seasonality_matrix = get_seasonality_matrix(dates,
-                                                         seasonality_function)
+        mat, compress = get_seasonality_matrix(dates, seasonality_function)
+
+        self.seasonality_matrix = mat
+        self.compression_dict = compress
         self.solution = None
         self.slope = None
         self.offset = None
@@ -119,8 +122,12 @@ class ZaggyModel(object):
         non_seasonal_extrap = np.array([self.extrapolate_without_seasonal(xx)
                                         for xx in x_extrap])
 
-        seasonal_indices_extrap = [self.seasonality_function(date)
-                                   for date in dates_extrap]
+        seasonal_indices_extrap_raw = [self.seasonality_function(date)
+                                       for date in dates_extrap]
+
+        seasonal_indices_extrap = [self.compression_dict[i]
+                                   for i in seasonal_indices_extrap_raw]
+
         seasonal_extrap = np.array([self.seasonal[i] for i in seasonal_indices_extrap])
 
         extrapolated = non_seasonal_extrap + seasonal_extrap

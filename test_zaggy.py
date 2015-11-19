@@ -19,9 +19,8 @@ class TestZaggy(TestCase):
         self.dates = date_range(2015, 1, 2029, 12)[0:self.num]
         self.assertEquals(len(self.y), len(self.dates))
         seas_func = lambda date: date.month-1
-        self.seasonality_matrix = \
-            get_seasonality_matrix(self.dates,
-                                   seasonality_function=seas_func)
+        self.seasonality_matrix, self.compression_dict = \
+            get_seasonality_matrix(self.dates, seasonality_function=seas_func)
 
     def test_l1_fit_runs(self):
         index = np.arange(self.num)
