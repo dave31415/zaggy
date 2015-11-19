@@ -54,7 +54,7 @@ def seconds_in_time_unit(unit):
     # and case insensitivity
 
     unit = unit.lower()
-    if unit[-1] == 's':
+    if unit.endswith('s'):
         unit = unit[:-1]
 
     return seconds[unit]

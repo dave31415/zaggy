@@ -5,7 +5,7 @@ from matrix_utils import zero_spmatrix
 def get_seasonality_matrix(dates, seasonality_function):
     """
     Create a sparse matrix mapping one index of seasonality variable
-    to each datapoint
+    to each data-point
     :param dates: iterable of datetime or date objects
     :param seasonality_function: a function or lambda taking
     a datetime or date object to a seasonality index, for example
