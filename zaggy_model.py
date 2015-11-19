@@ -65,9 +65,7 @@ class ZaggyModel(object):
         # dummy functions for now, replace after fit
         self.interpolate = lambda x: None
         self.extrapolate_without_seasonal = lambda x: None
-
-        # TODO: make a mapping here from date to compressed index
-        # TODO: which handles unconstrained indices
+        self.date_to_seasonal_component = lambda x: None
 
         if params is not None:
             # override any parameters handed in with
@@ -100,6 +98,19 @@ class ZaggyModel(object):
         sum_seasonal = seasonal_params.sum()
         self.seasonal = np.array(list(seasonal_params) + [-sum_seasonal])
 
+        # define this function to gracefully handle
+        # unconstrained seasonal params
+
+        def date_to_seasonal_component_function(the_date):
+            the_index = self.seasonality_function(the_date)
+            if the_index not in self.compression_dict:
+                return 0.0
+
+            compressed_index = self.compression_dict[the_index]
+            return self.seasonal[compressed_index]
+
+        self.date_to_seasonal_component = date_to_seasonal_component_function
+
         # set this function for interpolating
         self.interpolate = interp1d(self.x, self.solution['model'])
         self.extrapolate_without_seasonal = lambda new_x: self.offset + self.slope * new_x
@@ -125,16 +136,7 @@ class ZaggyModel(object):
         non_seasonal_extrap = np.array([self.extrapolate_without_seasonal(xx)
                                         for xx in x_extrap])
 
-        seasonal_indices_extrap_raw = [self.seasonality_function(date)
-                                       for date in dates_extrap]
-
-        # TODO: needs to be able to handle dates that have no constrained param
-        # TODO: figure out an elegant way to do that, see TODO above
-
-        seasonal_indices_extrap = [self.compression_dict[i]
-                                   for i in seasonal_indices_extrap_raw]
-
-        seasonal_extrap = np.array([self.seasonal[i] for i in seasonal_indices_extrap])
+        seasonal_extrap = np.array([self.date_to_seasonal_component(d) for d in dates_extrap])
 
         extrapolated = non_seasonal_extrap + seasonal_extrap
         result[extrapolate_region] = extrapolated
