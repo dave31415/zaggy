@@ -26,7 +26,8 @@ def l1_fit(index, y, beta_d2=1.0, beta_d1=1.0, beta_seasonal=1.0,
     :return:
     """
 
-    print "beta_d2: %s" % beta_d2
+    # print "beta_d2: %s" % beta_d2
+    # print "beta_seasonal: %s" % beta_seasonal
 
     assert isinstance(y, np.ndarray)
     assert isinstance(index, np.ndarray)

@@ -1,7 +1,6 @@
 import numpy as np
 import cvxopt
 import matrix_utils as mu
-from zaggy import l1_fit
 
 
 doplot = False

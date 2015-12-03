@@ -60,8 +60,8 @@ def l1(P, q):
             cvxopt.lapack.potrs(A, x)
 
             u = P*x[:n]
-            x[n:] = cvxopt.div( x[n:] - cvxopt.div(z[:m], d1**2) - cvxopt.div(z[m:], d2**2) +
-                cvxopt.mul(d1**-2 - d2**-2, u), d1**-2 + d2**-2 )
+            x[n:] = cvxopt.div(x[n:] - cvxopt.div(z[:m], d1**2) - cvxopt.div(z[m:], d2**2) +
+                cvxopt.mul(d1**-2 - d2**-2, u), d1**-2 + d2**-2)
 
             z[:m] = cvxopt.div(u-x[n:]-z[:m], d1)
             z[m:] = cvxopt.div(-u-x[n:]-z[m:], d2)

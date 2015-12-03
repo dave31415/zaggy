@@ -43,9 +43,14 @@ class ZaggyModel(object):
         self.x = np.array([scale_date(date, self.timescale) for date in dates])
         self.x_min = min(self.x)
         self.x_max = max(self.x)
+        self.params = default_params()
         if seasonality_function is None:
-            # TODO: does it make sense to have a default?
+            # does it make sense to have a default?
+            # only with seasonality turned off
             seasonality_function = lambda the_date: the_date.month - 1
+            # some largish number
+            self.params['beta_seasonal'] = 13796.0
+
         self.seasonality_function = seasonality_function
 
         # calculate the seasonality matrix, this combined with the
@@ -60,7 +65,6 @@ class ZaggyModel(object):
         self.slope = None
         self.offset = None
         self.seasonal = None
-        self.params = default_params()
 
         # dummy functions for now, replace after fit
         self.interpolate = lambda x: None
