@@ -15,7 +15,8 @@ def run_on_random(num_ts=5, n_points=70, prompt=False):
     n_plots_long = 5
     n_plots_wide = 1
     i = 0
-    timescale = (5, 'day')
+    #timescale = (5, 'day')
+    timescale = None
     params = {'beta_step': 1000,
               'beta_d1': 0.0,
               'beta_d2': 1.0

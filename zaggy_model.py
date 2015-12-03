@@ -13,13 +13,28 @@ def default_params():
             "growth": 0.0}
 
 
+def default_timescale(dates):
+    """
+    :param dates: ndarray of dates
+    :return: a timescale that seems appropriate enough
+             to use as a default is none is provided
+    """
+    # divide total range by this factor
+    factor = 10.0
+    min_date = min(dates)
+    max_date = max(dates)
+    diff = max_date - min_date
+    n_seconds = diff.total_seconds()
+    return n_seconds/factor, 'seconds'
+
+
 class ZaggyModel(object):
     """
     A zaggy time series model
     """
 
     def __init__(self, dates, y,
-                 timescale=(1, 'month'),
+                 timescale=None,
                  seasonality_function=None,
                  params=None):
         """
@@ -36,6 +51,11 @@ class ZaggyModel(object):
                mostly regularization parameters, see default_params
         :return: an object instance
         """
+
+        if timescale is None:
+            # timescale = (1, 'month')
+            timescale = default_timescale(dates)
+
         self.dates = np.array(dates)
         self.y = np.array(y)
         # scale the dates to an index
