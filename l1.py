@@ -6,6 +6,10 @@ This could use some refactoring and cleaning up
 """
 import cvxopt
 
+# set this to 1 to see progress of fits
+# possibly for low level debugging
+cvxopt.solvers.options['show_progress'] = 0
+
 
 def l1(P, q):
     """
